@@ -20,8 +20,11 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+	implementation("com.squareup.okhttp3:okhttp:3.14.2")
+	implementation("com.github.salomonbrys.kotson:kotson:2.5.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+
 }
 
 tasks.withType<KotlinCompile> {

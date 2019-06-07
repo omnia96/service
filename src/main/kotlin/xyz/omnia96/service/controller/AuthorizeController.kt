@@ -12,7 +12,9 @@ import xyz.omnia96.service.model.User
 import xyz.omnia96.service.provider.GithubProvider
 import java.util.*
 import javax.annotation.Resource
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Controller
 class AuthorizeController {
@@ -32,7 +34,7 @@ class AuthorizeController {
     lateinit var userMapper:UserMapper
 
     @GetMapping("/callback")
-    fun callback(@RequestParam(name = "code") code:String,@RequestParam(name = "state") state:String,httpServletRequest:HttpServletRequest):String{
+    fun callback(@RequestParam(name = "code") code:String,@RequestParam(name = "state") state:String,httpServletRequest:HttpServletRequest,httpServletResponse: HttpServletResponse):String{
         var accessTokenDto:AccessTokenDto = AccessTokenDto(clientId,clientSecret,code,redirectUrl,state)
         var accessToken: String? =  githubProvider.getAccessToken(accessTokenDto)
         var githubUser: GithubUser? = githubProvider.getUser(accessToken)
@@ -46,8 +48,8 @@ class AuthorizeController {
 
             var user:User = User(name,accountId, token,gmtCreate,gmtModified)
             userMapper.insert(user)
+            httpServletResponse.addCookie(Cookie("token",token))
 
-            httpServletRequest.getSession().setAttribute("user",githubUser)
             return "redirect:/"
         }else{
             return "redirect:/"

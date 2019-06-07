@@ -24,7 +24,9 @@ dependencies {
 	implementation("com.github.salomonbrys.kotson:kotson:2.5.0")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-
+	compile("org.springframework.boot:spring-boot-starter-jdbc")
+	compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1")
+	compile("com.microsoft.sqlserver:mssql-jdbc:7.2.2.jre11")
 }
 
 tasks.withType<KotlinCompile> {

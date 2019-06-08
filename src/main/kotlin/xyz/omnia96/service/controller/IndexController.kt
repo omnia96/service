@@ -12,18 +12,21 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 
 
-@Resource
+@Controller
 class IndexController{
-    @Autowired
+    @Resource
     lateinit var userMapper:UserMapper
 
     @GetMapping("/")
     fun hello(httpServletRequest: HttpServletRequest):String{
         var cookies = httpServletRequest.cookies
-        for(cookie:Cookie in cookies){
+        for( cookie:Cookie in cookies){
+            println(cookie.name)
             if (cookie.name.equals("token")){
-                var token = cookie.name
+                var token:String = cookie.value
+                println(token)
                 var user:User = userMapper.findByToken(token)
+                println(user)
                 if (user != null){
                     httpServletRequest.getSession().setAttribute("user",user)
                 }

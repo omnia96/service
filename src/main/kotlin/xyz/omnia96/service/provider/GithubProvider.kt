@@ -19,15 +19,12 @@ class GithubProvider {
         var mediaType:MediaType = MediaType.get("application/json; charset=utf-8")
         var okHttpClient:OkHttpClient = OkHttpClient()
         var requestBody:RequestBody = RequestBody.create(mediaType,Gson().toJson(accessTokenDto))
-//        print(Gson().toJson(accessTokenDto))
         var request:Request = Request.Builder().url("https://github.com/login/oauth/access_token").post(requestBody).build()
         try {
             var response:Response = okHttpClient.newCall(request).execute()
             var string:String = response.body()!!.string()
-            println(string)
             var tokenString: String =string.split("&")[0]
             var token:String = tokenString.split("=")[1]
-            println(token)
             return  token
         }catch (e: IOException){ }
         return null
@@ -39,11 +36,7 @@ class GithubProvider {
         try {
             var response:Response = okHttpClient.newCall(request).execute()
             var string:String = response.body()!!.string()
-            println(string)
             var githubUser:GithubUser? = Gson().fromJson(string)
-
-
-
             return githubUser
 
         } catch (e:IOException){}

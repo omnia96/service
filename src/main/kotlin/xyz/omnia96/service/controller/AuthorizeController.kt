@@ -34,22 +34,26 @@ class AuthorizeController {
     lateinit var userMapper:UserMapper
 
     @GetMapping("/callback")
-    fun callback(@RequestParam(name = "code") code:String,@RequestParam(name = "state") state:String,httpServletRequest:HttpServletRequest,httpServletResponse: HttpServletResponse):String{
+    fun callback(@RequestParam(name = "code") code:String,@RequestParam(name = "state") state:String,httpServletResponse: HttpServletResponse):String{
         var accessTokenDto:AccessTokenDto = AccessTokenDto(clientId,clientSecret,code,redirectUrl,state)
         var accessToken: String? =  githubProvider.getAccessToken(accessTokenDto)
         var githubUser: GithubUser? = githubProvider.getUser(accessToken)
         if (githubUser != null){
 
-            var name = githubUser.name
-            var accountId = githubUser.id
-            var token = UUID.randomUUID().toString()
-            var gmtCreate = System.currentTimeMillis()
-            var gmtModified = gmtCreate
+            var name:String = githubUser.name.toString()
+            var accountId:String = githubUser.id
+            var token:String = UUID.randomUUID().toString()
+            var gmtCreate:Long = System.currentTimeMillis()
+            var gmtModified:Long = gmtCreate
 
-            var user:User = User(name,accountId, token,gmtCreate,gmtModified)
-            userMapper.insert(user)
-            httpServletResponse.addCookie(Cookie("token",token))
-
+            var user:User = User(name,accountId,token,gmtCreate,gmtModified)
+            var userIs:User = userMapper.findUserByAccountId(user)
+            println(userIs)
+            if(userIs != null){
+                httpServletResponse.addCookie(Cookie("token",userIs.token))
+            }else{
+                userMapper.insert(user)
+            }
             return "redirect:/"
         }else{
             return "redirect:/"
